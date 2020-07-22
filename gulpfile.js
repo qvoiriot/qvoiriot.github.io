@@ -9,17 +9,24 @@ var calc = require('postcss-calc');
 var concat = require('gulp-concat');
 var rename = require('gulp-rename');
 var uglify = require('gulp-uglify');
-const ghPages = require('gulp-gh-pages-will');
+var ghPages = require('gulp-gh-pages-will');
+const fileinclude = require('gulp-file-include');
 
 // js file paths
-var utilJsPath = 'dist/assets/js'; // util.js path - you may need to update this if including the framework as external node module
-var componentsJsPath = 'dist/assets/js/components/*.js'; // component js files
-var scriptsJsPath = 'dist/assets/js'; //folder for final scripts.js/scripts.min.js files
+var utilJsPath = 'main/assets/js'; // util.js path - you may need to update this if including the framework as external node module
+var componentsJsPath = 'main/assets/js/components/*.js'; // component js files
+var scriptsJsPath = '.dist/assets/js'; //folder for final scripts.js/scripts.min.js files
 
 // css file paths
-var cssFolder = 'dist/assets/css'; // folder for final style.css/style-custom-prop-fallbac.css files
-var scssFilesPath = 'dist/assets/css/**/*.scss'; // scss files to watch
-var distghPages = 'dist/index.html'
+var cssFolder = '.dist/assets/css'; // folder for final style.css/style-custom-prop-fallbac.css files
+var scssFilesPath = 'main/assets/css/**/*.scss'; // scss files to watch
+
+var paths = {
+	scripts: {
+		src: './',
+		dest: '.dist/'
+	}
+};
 
 function reload(done) {
 	browserSync.reload();
@@ -60,24 +67,35 @@ gulp.task('scripts', function () {
 gulp.task('browserSync', gulp.series(function (done) {
 	browserSync.init({
 		server: {
-			baseDir: 'dist'
+			baseDir: '.dist'
 		},
 		notify: false
 	})
 	done();
 }));
 
-gulp.task('watch', gulp.series(['browserSync', 'sass', 'scripts'], function () {
-	gulp.watch('dist/*.html', gulp.series(reload));
-	gulp.watch('dist/assets/css/**/*.scss', gulp.series(['sass']));
+gulp.task('fileinclude', function () {
+	return gulp.src([
+			'main/**/*.html'
+		])
+		.pipe(fileinclude({
+			prefix: '@@',
+			basepath: '@file'
+		}))
+		.pipe(gulp.dest('.dist/'))
+		.pipe(browserSync.reload({
+			stream: true
+		}))
+});
+
+gulp.task('watch', gulp.series(['fileinclude', 'browserSync', 'sass', 'scripts'], function () {
+	gulp.watch('main/**/*.html', gulp.series(['fileinclude']));
+	gulp.watch('main/assets/css/**/*.scss', gulp.series(['sass']));
 	gulp.watch(componentsJsPath, gulp.series(['scripts']));
 }));
 
-/**
- * Push build to gh-pages
- */
 gulp.task('deploy', function () {
-	return gulp.src("dist/**/*")
+	return gulp.src(".dist/**/*")
 		.pipe(ghPages({
 			branch: 'master'
 		}))

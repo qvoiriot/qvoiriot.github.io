@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+
+	@@include('tpl/components/head.html',
+	{
+	"title": "Homepage"
+	})
+
+	<body>
+
+		<div class="off-canvas off-canvas--full-width off-canvas--navigation js-off-canvas js-off-canvas--nav">
+
+			@@include('tpl/components/menu.html')
+
+			<main class="off-canvas__main">
+				@@include('tpl/page_types/homepage.html')
+			</main>
+		</div>
+
+		@@include('tpl/components/cookie_disclaimer.html')
+
+		@@include('tpl/components/footer.html')
+	</body>
+
+</html>

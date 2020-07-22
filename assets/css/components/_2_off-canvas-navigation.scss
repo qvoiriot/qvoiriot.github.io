@@ -1,0 +1,173 @@
+/* -------------------------------- 
+
+File#: _2_off-canvas-navigation
+Title: Off-Canvas Navigation
+Descr: An off-canvas section containing the main navigation
+Usage: codyhouse.co/license
+
+-------------------------------- */
+
+// navigation button
+.offnav-control { // variation of the Animated Menu Button component
+    --anim-menu-btn-size: 48px;
+    // 🍔 icon
+    --anim-menu-btn-icon-size: 24px;
+    --anim-menu-btn-icon-stroke: 2px;
+    position: fixed;
+    top: var(--space-sm);
+    left: var(--space-sm);
+    z-index: var(--zindex-fixed-element);
+    border-radius: 50%;
+    transition: transform .3s var(--ease-in-out);
+    color: var(--color-contrast-high); // icon color
+  
+    &.anim-menu-btn--state-b {
+      transform: rotate(180deg);
+    }
+  }
+  
+  .offnav-control__bg { // SVG used to set background color and animated stroke
+    display: block;
+    fill: var(--color-contrast-lower); // button background color
+    stroke-width: 1.5;
+    stroke: var(--color-contrast-low); // stroke color
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .offnav-control--ready-to-animate circle {
+    transition: stroke-dashoffset 0.3s 0s;
+  }
+  
+  .anim-menu-btn--state-b.offnav-control circle {
+    stroke-dashoffset: 0;
+    transition-delay: 0.3s;
+  }
+  
+  // content
+  .off-canvas--navigation .off-canvas__content {
+    padding: var(--space-lg) var(--component-padding);
+  }
+  
+  // off-canvas navigation
+  .offnav {
+    height: 100%;
+    text-align: center;
+  }
+  
+  .offnav__nav {
+    margin-bottom: var(--space-lg);
+  }
+  
+  .offnav__item {
+    margin-bottom: var(--space-sm);
+  }
+  
+  .offnav__link {
+    font-size: var(--text-xxl);
+    color: var(--color-contrast-higher);
+    text-decoration: none;
+    background-size: 0% 100%;
+    background-repeat: no-repeat;
+    background-image: linear-gradient(transparent 60%, alpha(var(--color-primary), 0.2) 60%);
+    will-change: background-size;
+    transition: background-size .3s var(--ease-in-out), color .3s;
+  
+    &:hover, &[aria-current="page"] {
+      color: var(--color-primary);
+    }
+  
+    &:hover {
+      background-size: 100% 100%;
+    }
+  }
+  
+  // secondary navigation
+  .offnav__subitem {
+    margin-bottom: var(--space-sm);
+  }
+  
+  .offnav__sublink {
+    color: var(--color-contrast-higher);
+  }
+  
+  .offnav__a11y-close-btn { // accessible close button - sr and keyboard
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: var(--zindex-fixed-element);
+    background-color: var(--color-contrast-lower);
+    padding: var(--space-sm) var(--space-md);
+    box-shadow: var(--shadow-lg);
+  
+    // hide
+    clip: rect(1px, 1px, 1px, 1px);
+    clip-path: inset(50%);
+  
+    &:focus {
+      // show
+      clip: auto;
+      clip-path: none;
+      outline: 3px solid var(--color-primary);
+    }
+  }
+  
+  @include breakpoint(md) {
+    .off-canvas--navigation .off-canvas__content {
+      padding: var(--space-md) 0;
+    }
+  
+    .offnav {
+      text-align: initial;
+    }
+  
+    .offnav__item--label { // - navigation
+      font-size: var(--text-sm);
+      margin-bottom: var(--space-md);
+  
+      &::before {
+        content: '';
+        display: inline-block;
+        width: 2em;
+        height: 1px;
+        background-color: currentColor;
+        vertical-align: middle;
+        margin-right: 0.5em;
+      }
+    }
+  
+    .offnav__link {
+      font-size: calc(var(--text-xxl)*1.2);
+    }
+  
+    .offnav__subnav {
+      margin-top: auto;
+      padding-top: var(--space-xs);
+      border-top: 1px solid var(--color-contrast-low);
+    }
+  
+    .offnav__sublist {
+      display: flex;
+    }
+  
+    .offnav__subitem {
+      font-size: var(--text-xs);
+      margin-right: var(--space-xs);
+  
+      &:first-child {
+        margin-right: auto; // move @copyright to the left
+      }
+  
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+  
+  // JS disabed style
+  html:not(.js) .offnav-control {
+    display: none;
+  }

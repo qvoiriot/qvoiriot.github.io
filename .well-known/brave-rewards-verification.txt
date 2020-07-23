@@ -1,4 +1,0 @@
-This is a Brave Rewards publisher verification file.
-
-Domain: qvoiriot.github.io
-Token: 5355927303acfb23221f0986c2ce136e38fd38872fee6ad56d6af20024943529

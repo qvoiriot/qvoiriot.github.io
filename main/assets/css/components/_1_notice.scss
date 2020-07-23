@@ -81,5 +81,16 @@ Usage: codyhouse.co/license
 .notice--v3 {
   .notice__banner {
     max-width: 320px;
+    margin-right: auto;
+    margin-left: auto;
+  }
+}
+
+@include breakpoint(md) {
+  .notice--v3 {
+    .notice__banner
+    {
+      margin-right: 0;
+    }
   }
 }

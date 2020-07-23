@@ -88,7 +88,7 @@ gulp.task('fileinclude', function () {
 		}))
 });
 
-gulp.task('watch', gulp.series(['fileinclude', 'browserSync', 'sass', 'scripts'], function () {
+gulp.task('default', gulp.series(['fileinclude', 'browserSync', 'sass', 'scripts'], function () {
 	gulp.watch('main/**/*.html', gulp.series(['fileinclude']));
 	gulp.watch('main/assets/css/**/*.scss', gulp.series(['sass']));
 	gulp.watch(componentsJsPath, gulp.series(['scripts']));

@@ -98,13 +98,6 @@ gulp.task('copyimages', function () {
 		}))
 });
 
-gulp.task('batRewardsVerification', function () {
-	return gulp.src([
-			'main/.well-known/*'
-		])
-		.pipe(gulp.dest('.dist/.well-known/'))
-});
-
 gulp.task('default', gulp.series(['fileinclude', 'copyimages', 'browserSync', 'sass', 'scripts'], function () {
 	gulp.watch('main/assets/img/**/*.{gif,jpg,png,svg}', gulp.series(['copyimages']));
 	gulp.watch('main/**/*.html', gulp.series(['fileinclude']));

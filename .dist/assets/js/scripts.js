@@ -294,43 +294,68 @@ Math.easeOutElastic = function (t, b, c, d) {
   };
   window.addEventListener('mousedown', detectClick);
 }());
-// File#: _1_anim-menu-btn
+// File#: _1_header
 // Usage: codyhouse.co/license
 (function() {
-	var menuBtns = document.getElementsByClassName('js-anim-menu-btn');
-	if( menuBtns.length > 0 ) {
-		for(var i = 0; i < menuBtns.length; i++) {(function(i){
-			initMenuBtn(menuBtns[i]);
-		})(i);}
+	var mainHeader = document.getElementsByClassName('js-header');
+	if( mainHeader.length > 0 ) {
+		var trigger = mainHeader[0].getElementsByClassName('js-header__trigger')[0],
+			nav = mainHeader[0].getElementsByClassName('js-header__nav')[0];
 
-		function initMenuBtn(btn) {
-			btn.addEventListener('click', function(event){	
-				event.preventDefault();
-				var status = !Util.hasClass(btn, 'anim-menu-btn--state-b');
-				Util.toggleClass(btn, 'anim-menu-btn--state-b', status);
-				// emit custom event
-				var event = new CustomEvent('anim-menu-btn-clicked', {detail: status});
-				btn.dispatchEvent(event);
-			});
+		// we'll use these to store the node that needs to receive focus when the mobile menu is closed 
+		var focusMenu = false;
+
+		//detect click on nav trigger
+		trigger.addEventListener("click", function(event) {
+			event.preventDefault();
+			toggleNavigation(!Util.hasClass(nav, 'header__nav--is-visible'));
+		});
+
+		// listen for key events
+		window.addEventListener('keyup', function(event){
+			// listen for esc key
+			if( (event.keyCode && event.keyCode == 27) || (event.key && event.key.toLowerCase() == 'escape' )) {
+				// close navigation on mobile if open
+				if(trigger.getAttribute('aria-expanded') == 'true' && isVisible(trigger)) {
+					focusMenu = trigger; // move focus to menu trigger when menu is close
+					trigger.click();
+				}
+			}
+			// listen for tab key
+			if( (event.keyCode && event.keyCode == 9) || (event.key && event.key.toLowerCase() == 'tab' )) {
+				// close navigation on mobile if open when nav loses focus
+				if(trigger.getAttribute('aria-expanded') == 'true' && isVisible(trigger) && !document.activeElement.closest('.js-header')) trigger.click();
+			}
+		});
+
+		// listen for resize
+		var resizingId = false;
+		window.addEventListener('resize', function() {
+			clearTimeout(resizingId);
+			resizingId = setTimeout(doneResizing, 500);
+		});
+
+		function doneResizing() {
+			if( !isVisible(trigger) && Util.hasClass(mainHeader[0], 'header--expanded')) toggleNavigation(false); 
 		};
 	}
-}());
-// File#: _1_google-maps
-// Usage: codyhouse.co/license
-function initGoogleMap() {
-	var contactMap = document.getElementsByClassName('js-google-maps');
-	if(contactMap.length > 0) {
-		for(var i = 0; i < contactMap.length; i++) {
-			initContactMap(contactMap[i]);
-		}
-	}
-};
 
-function initContactMap(wrapper) {
-	var coordinate = wrapper.getAttribute('data-coordinates').split(',');
-	var map = new google.maps.Map(wrapper, {zoom: 10, center: {lat: Number(coordinate[0]), lng:  Number(coordinate[1])}});
-	var marker = new google.maps.Marker({position: {lat: Number(coordinate[0]), lng:  Number(coordinate[1])}, map: map});
-};
+	function isVisible(element) {
+		return (element.offsetWidth || element.offsetHeight || element.getClientRects().length);
+	};
+
+	function toggleNavigation(bool) { // toggle navigation visibility on small device
+		Util.toggleClass(nav, 'header__nav--is-visible', bool);
+		Util.toggleClass(mainHeader[0], 'header--expanded', bool);
+		trigger.setAttribute('aria-expanded', bool);
+		if(bool) { //opening menu -> move focus to first element inside nav
+			nav.querySelectorAll('[href], input:not([disabled]), button:not([disabled])')[0].focus();
+		} else if(focusMenu) {
+			focusMenu.focus();
+			focusMenu = false;
+		}
+	};
+}());
 // File#: _1_notice
 // Usage: codyhouse.co/license
 (function() {
@@ -349,213 +374,4 @@ function initContactMap(wrapper) {
       initNoticeEvents(noticeElements[i]);
     })(i);}
   }
-}());
-// File#: _1_off-canvas-content
-// Usage: codyhouse.co/license
-(function() {
-	var OffCanvas = function(element) {
-		this.element = element;
-		this.wrapper = document.getElementsByClassName('js-off-canvas')[0];
-		this.main = document.getElementsByClassName('off-canvas__main')[0];
-		this.triggers = document.querySelectorAll('[aria-controls="'+this.element.getAttribute('id')+'"]');
-		this.closeBtn = this.element.getElementsByClassName('js-off-canvas__close-btn');
-		this.selectedTrigger = false;
-		this.firstFocusable = null;
-		this.lastFocusable = null;
-		this.animating = false;
-		initOffCanvas(this);
-	};	
-
-	function initOffCanvas(panel) {
-		panel.element.setAttribute('aria-hidden', 'true');
-		for(var i = 0 ; i < panel.triggers.length; i++) { // lister to the click on off-canvas content triggers
-			panel.triggers[i].addEventListener('click', function(event){
-				panel.selectedTrigger = event.currentTarget;
-				event.preventDefault();
-				togglePanel(panel);
-			});
-		}
-	};
-
-	function togglePanel(panel) {
-		var status = (panel.element.getAttribute('aria-hidden') == 'true') ? 'close' : 'open';
-		if(status == 'close') openPanel(panel);
-		else closePanel(panel);
-	};
-
-	function openPanel(panel) {
-		if(panel.animating) return; // already animating
-		emitPanelEvents(panel, 'openPanel', '');
-		panel.animating = true;
-		panel.element.setAttribute('aria-hidden', 'false');
-		Util.addClass(panel.wrapper, 'off-canvas--visible');
-		getFocusableElements(panel);
-		var transitionEl = panel.element;
-		if(panel.closeBtn.length > 0 && !Util.hasClass(panel.closeBtn[0], 'js-off-canvas__a11y-close-btn')) transitionEl = 	panel.closeBtn[0];
-		transitionEl.addEventListener('transitionend', function cb(){
-			// wait for the end of transition to move focus and update the animating property
-			panel.animating = false;
-			Util.moveFocus(panel.element);
-			transitionEl.removeEventListener('transitionend', cb);
-		});
-		if(!transitionSupported) panel.animating = false;
-		initPanelEvents(panel);
-	};
-
-	function closePanel(panel, bool) {
-		if(panel.animating) return;
-		panel.animating = true;
-		panel.element.setAttribute('aria-hidden', 'true');
-		Util.removeClass(panel.wrapper, 'off-canvas--visible');
-		panel.main.addEventListener('transitionend', function cb(){
-			panel.animating = false;
-			if(panel.selectedTrigger) panel.selectedTrigger.focus();
-			setTimeout(function(){panel.selectedTrigger = false;}, 10);
-			panel.main.removeEventListener('transitionend', cb);
-		});
-		if(!transitionSupported) panel.animating = false;
-		cancelPanelEvents(panel);
-		emitPanelEvents(panel, 'closePanel', bool);
-	};
-
-	function initPanelEvents(panel) { //add event listeners
-		panel.element.addEventListener('keydown', handleEvent.bind(panel));
-		panel.element.addEventListener('click', handleEvent.bind(panel));
-	};
-
-	function cancelPanelEvents(panel) { //remove event listeners
-		panel.element.removeEventListener('keydown', handleEvent.bind(panel));
-		panel.element.removeEventListener('click', handleEvent.bind(panel));
-	};
-
-	function handleEvent(event) {
-		switch(event.type) {
-			case 'keydown':
-				initKeyDown(this, event);
-				break;
-			case 'click':
-				initClick(this, event);
-				break;
-		}
-	};
-
-	function initClick(panel, event) { // close panel when clicking on close button
-		if( !event.target.closest('.js-off-canvas__close-btn')) return;
-		event.preventDefault();
-		closePanel(panel, 'close-btn');
-	};
-
-	function initKeyDown(panel, event) {
-		if( event.keyCode && event.keyCode == 27 || event.key && event.key == 'Escape' ) {
-			//close off-canvas panel on esc
-			closePanel(panel, 'key');
-		} else if( event.keyCode && event.keyCode == 9 || event.key && event.key == 'Tab' ) {
-			//trap focus inside panel
-			trapFocus(panel, event);
-		}
-	};
-
-	function trapFocus(panel, event) {
-		if( panel.firstFocusable == document.activeElement && event.shiftKey) {
-			//on Shift+Tab -> focus last focusable element when focus moves out of panel
-			event.preventDefault();
-			panel.lastFocusable.focus();
-		}
-		if( panel.lastFocusable == document.activeElement && !event.shiftKey) {
-			//on Tab -> focus first focusable element when focus moves out of panel
-			event.preventDefault();
-			panel.firstFocusable.focus();
-		}
-	};
-
-	function getFocusableElements(panel) { //get all focusable elements inside the off-canvas content
-		var allFocusable = panel.element.querySelectorAll('[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, [tabindex]:not([tabindex="-1"]), [contenteditable], audio[controls], video[controls], summary');
-		getFirstVisible(panel, allFocusable);
-		getLastVisible(panel, allFocusable);
-	};
-
-	function getFirstVisible(panel, elements) { //get first visible focusable element inside the off-canvas content
-		for(var i = 0; i < elements.length; i++) {
-			if( elements[i].offsetWidth || elements[i].offsetHeight || elements[i].getClientRects().length ) {
-				panel.firstFocusable = elements[i];
-				return true;
-			}
-		}
-	};
-
-	function getLastVisible(panel, elements) { //get last visible focusable element inside the off-canvas content
-		for(var i = elements.length - 1; i >= 0; i--) {
-			if( elements[i].offsetWidth || elements[i].offsetHeight || elements[i].getClientRects().length ) {
-				panel.lastFocusable = elements[i];
-				return true;
-			}
-		}
-	};
-
-	function emitPanelEvents(panel, eventName, target) { // emit custom event
-		var event = new CustomEvent(eventName, {detail: target});
-		panel.element.dispatchEvent(event);
-	};
-
-	//initialize the OffCanvas objects
-	var offCanvas = document.getElementsByClassName('js-off-canvas__panel'),
-		transitionSupported = Util.cssSupports('transition');
-	if( offCanvas.length > 0 ) {
-		for( var i = 0; i < offCanvas.length; i++) {
-			(function(i){new OffCanvas(offCanvas[i]);})(i);
-		}
-	}
-}());
-// File#: _2_off-canvas-navigation
-// Usage: codyhouse.co/license
-(function () {
-    var OffCanvasNav = function (element) {
-        this.element = element;
-        this.panel = this.element.getElementsByClassName('js-off-canvas__panel')[0];
-        this.trigger = document.querySelectorAll('[aria-controls="' + this.panel.getAttribute('id') + '"]')[0];
-        this.svgAnim = this.trigger.getElementsByTagName('circle');
-        initOffCanvasNav(this);
-    };
-
-    function initOffCanvasNav(canvas) {
-        if (transitionSupported) {
-            // do not allow click on menu icon while the navigation is animating
-            canvas.trigger.addEventListener('click', function (event) {
-                canvas.trigger.style.setProperty('pointer-events', 'none');
-            });
-            canvas.panel.addEventListener('openPanel', function (event) {
-                canvas.trigger.style.setProperty('pointer-events', 'none');
-            });
-            canvas.panel.addEventListener('transitionend', function (event) {
-                if (event.propertyName == 'visibility') {
-                    canvas.trigger.style.setProperty('pointer-events', '');
-                }
-            });
-        }
-
-        if (canvas.svgAnim.length > 0) { // create the circle fill-in effect
-            var circumference = (2 * Math.PI * canvas.svgAnim[0].getAttribute('r')).toFixed(2);
-            canvas.svgAnim[0].setAttribute('stroke-dashoffset', circumference);
-            canvas.svgAnim[0].setAttribute('stroke-dasharray', circumference);
-            Util.addClass(canvas.trigger, 'offnav-control--ready-to-animate');
-        }
-
-        canvas.panel.addEventListener('closePanel', function (event) {
-            // if the navigation is closed using keyboard or a11y close btn -> change trigger icon appearance (from arrow to menu icon) 
-            if (event.detail == 'key' || event.detail == 'close-btn') {
-                canvas.trigger.click();
-            }
-        });
-    };
-
-    // init OffCanvasNav objects
-    var offCanvasNav = document.getElementsByClassName('js-off-canvas--nav'),
-        transitionSupported = Util.cssSupports('transition');
-    if (offCanvasNav.length > 0) {
-        for (var i = 0; i < offCanvasNav.length; i++) {
-            (function (i) {
-                new OffCanvasNav(offCanvasNav[i]);
-            })(i);
-        }
-    }
 }());

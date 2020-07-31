@@ -26,66 +26,45 @@
 </head>
 
 	<body>
+		<header class="header position-relative js-header ">
+	<div class="header__container container max-width-md">
+		<div class="header__logo">
+			<a href="#0">
+				<span class="icon-logo"></span>
+			</a>
+		</div>
 
-		<div class="off-canvas off-canvas--full-width off-canvas--navigation js-off-canvas js-off-canvas--nav">
+		<button class="btn btn--subtle header__trigger js-header__trigger" aria-label="Toggle menu"
+			aria-expanded="false" aria-controls="header-nav">
+			<i class="header__trigger-icon" aria-hidden="true"></i>
+		</button>
 
-			<button class="reset anim-menu-btn offnav-control js-anim-menu-btn js-tab-focus" aria-label="Toggle navigation"
-	aria-controls="offcanvas-panel-1">
-	<svg class="offnav-control__bg" aria-hidden="true" viewBox="0 0 48 48">
-		<circle cx="24" cy="24" r="22" stroke-miterlimit="10" /></svg>
-	<i class="anim-menu-btn__icon anim-menu-btn__icon--arrow-right" aria-hidden="true"></i>
-</button>
-
-
-<div id="offcanvas-panel-1" class="off-canvas__panel js-off-canvas__panel">
-	<div class="off-canvas__content">
-		<div class="offnav">
-			<div class="height-100% container max-width-sm flex flex-column">
-				<nav class="offnav__nav" role="navigation" aria-label="Main">
-					<ul class="offnav__list">
-						<li class="offnav__item offnav__item--label">Navigation</li>
-						<li class="offnav__item"><a href="../tpl/page_types/about.html" class="offnav__link">Me, Myslelf and I</a></li>
-						<li class="offnav__item"><a href="../tpl/page_types/donate.html" class="offnav__link">Donate</a></li>
-						<li class="offnav__item"><a href="../tpl/page_types/contact.html" class="offnav__link">Contact</a></li>
-					</ul>
-				</nav>
-
-				<nav class="offnav__subnav" role="navigation" aria-label="Secondary">
-					<ul class="offnav__sublist">
-						<li class="offnav__subitem">&copy; Copyright</li>
-						<li class="offnav__subitem"><a target="_blank" href="//linkedin.com/in/qvoiriot" class="offnav__sublink">linkedin</a></li>
-						<li class="offnav__subitem"><a target="_blank" href="//www.facebook.com/qvoiriot" class="offnav__sublink">Facebook</a></li>
-						<li class="offnav__subitem"><a target="_blank" href="//www.instagram.com/quentin_vrt/" class="offnav__sublink">Instagram</a></li>
-					</ul>
-				</nav>
-
-				<button
-					class="reset offnav__a11y-close-btn js-off-canvas__close-btn js-off-canvas__a11y-close-btn">Close
-					Navigation 👉</button>
+		<nav class="header__nav js-header__nav" id="header-nav" role="navigation" aria-label="Main">
+			<div class="header__nav-inner">
+				<ul class="header__list">
+					<li class="header__item"><a href="#0" class="header__link">About</a></li>
+					<li class="header__item"><a href="#0" class="header__link">Work</a></li>
+					<li class="header__item"><a href="#0" class="header__link">Contact</a></li>
+				</ul>
 			</div>
-		</div>
+		</nav>
 	</div>
-</div>
+</header>
 
-			<main class="off-canvas__main">
-				<div class="container height-100%">
-					<div class="flex flex-center height-100%">
-						<section class="diagonal-section width-100%" style="background-image: url('../../assets/img/hero-diagonal-img-1.jpg');">
-							<div class="container max-width-adaptive-sm padding-y-xxl">
-							  <div class="text-center">
-								<div class="text-sm opacity-60% margin-bottom-xxs color-white">Oh Lord !</div>
-						  
-								<div class="text-component margin-bottom-sm">
-								  <h1 class="color-white">Hello Internet, nice to meet you.</h1>
-								  <p class="color-white">What is that ? Something really simple, just have a look.</p>
-								</div>
-							  </div>
-							</div>
-						  </section>
-					</div>
-				</div>
-			</main>
-		</div>
+		<section class="diagonal-section bg-contrast-lower"
+    style="background-image: url('../../assets/img/hero-diagonal-img-1.jpg');">
+    <div class="container max-width-adaptive-sm padding-y-xxl">
+        <div class="text-center">
+            <div class="text-sm opacity-60% margin-bottom-xxs color-white">Oh lord! Hello Internet,
+            </div>
+
+            <div class="text-component margin-bottom-sm">
+                <h1 class="color-white">I'm Quentin.</br>UX/UI developer.</h1>
+                <p class="color-white">Nice to meet you.</p>
+            </div>
+        </div>
+    </div>
+</section>
 
 		<div class="notice notice--v3 js-notice">
     <div class="container">

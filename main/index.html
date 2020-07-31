@@ -7,30 +7,9 @@
 	})
 
 	<body>
+		@@include('tpl/components/menu.html')
 
-		<div class="off-canvas off-canvas--full-width off-canvas--navigation js-off-canvas js-off-canvas--nav">
-
-			@@include('tpl/components/menu_homepage.html')
-
-			<main class="off-canvas__main">
-				<div class="container height-100%">
-					<div class="flex flex-center height-100%">
-						<section class="diagonal-section width-100%" style="background-image: url('../../assets/img/hero-diagonal-img-1.jpg');">
-							<div class="container max-width-adaptive-sm padding-y-xxl">
-							  <div class="text-center">
-								<div class="text-sm opacity-60% margin-bottom-xxs color-white">Oh Lord !</div>
-						  
-								<div class="text-component margin-bottom-sm">
-								  <h1 class="color-white">Hello Internet, nice to meet you.</h1>
-								  <p class="color-white">What is that ? Something really simple, just have a look.</p>
-								</div>
-							  </div>
-							</div>
-						  </section>
-					</div>
-				</div>
-			</main>
-		</div>
+		@@include('tpl/components/hero.html')
 
 		@@include('tpl/components/cookie_disclaimer.html')
 

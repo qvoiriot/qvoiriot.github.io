@@ -98,6 +98,20 @@ gulp.task('copyimages', function () {
 		}))
 });
 
+gulp.task('copyBatNojekyll', function () {
+	return gulp.src([
+			'main/.nojekyll'
+		])
+		.pipe(gulp.dest('.dist/'))
+});
+
+gulp.task('copyBatWellKnown', function () {
+	return gulp.src([
+			'main/.well-known/**/*'
+		])
+		.pipe(gulp.dest('.dist/.well-known'))
+});
+
 gulp.task('default', gulp.series(['fileinclude', 'copyimages', 'browserSync', 'sass', 'scripts'], function () {
 	gulp.watch('main/assets/img/**/*.{gif,jpg,png,svg}', gulp.series(['copyimages']));
 	gulp.watch('main/**/*.html', gulp.series(['fileinclude']));
@@ -105,7 +119,7 @@ gulp.task('default', gulp.series(['fileinclude', 'copyimages', 'browserSync', 's
 	gulp.watch(componentsJsPath, gulp.series(['scripts']));
 }));
 
-gulp.task('deploy', function () {
+gulp.task('deploy',gulp.series(['copyBatNojekyll', 'copyBatWellKnown']), function () {
 	return gulp.src(".dist/**/*")
 		.pipe(ghPages({
 			branch: 'master'
